@@ -1,4 +1,5 @@
 import React from 'react'
+import Navbar from './_components/Navbar'
 
 interface RoutesLayoutProps {
     children:React.ReactNode
@@ -6,7 +7,7 @@ interface RoutesLayoutProps {
 const RoutesLayout = ({children}:RoutesLayoutProps) => {
   return (
     <>
-        Navbar
+        <Navbar />
         <div className='min-h-screen'>
             {children}    
         </div>

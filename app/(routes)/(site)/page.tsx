@@ -1,11 +1,12 @@
+import ImageWaves from "@/components/ImageWaves";
 import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <>
-      <Button>Click me</Button>
-      <ModeToggle />
-    </>
+    <div className="bg-slate-500">
+
+      {/* <ImageWaves myclassname="absolute top-0"/> */}
+    </div>
   );
 }
