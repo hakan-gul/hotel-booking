@@ -5,7 +5,7 @@ import React from 'react'
 const UserToggle = () => {
   return (
     <Link href='/auth/login'>
-        <UserIcon className="text-black dark:text-white" />
+        <UserIcon className=" text-white" />
     </Link>
   )
 }

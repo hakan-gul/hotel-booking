@@ -15,7 +15,7 @@ const MobileMenu = () => {
   return (
     <Sheet>
         <SheetTrigger>
-            <AlignJustify />
+            <AlignJustify className='text-white'/>
         </SheetTrigger>
         <SheetContent>
             <SheetHeader>
