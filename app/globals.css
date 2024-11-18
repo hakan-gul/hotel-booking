@@ -13,3 +13,7 @@
 .validationError{
     @apply text-red-500 dark:text-red-400 !important
 }
+
+.footer-bg{
+    background-image: url('/public/slider/1.jpg') !important
+}
