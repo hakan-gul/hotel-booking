@@ -12,6 +12,7 @@ import {
 import { SliderImage } from '@/constans'
 import Image from 'next/image'
 import ImageWaves from '@/components/ImageWaves'
+import HeroForm from './HeroForm'
 
 
 const Hero = () => {
@@ -43,10 +44,12 @@ const Hero = () => {
                     </CarouselItem>
                ))}
             </CarouselContent>
-            <CarouselPrevious className='left-0'/>
-            <CarouselNext className='right-0'/>
+            <CarouselPrevious className='left-1 top-52 md:top-1/2'/>
+            <CarouselNext className='right-1 top-52 md:top-1/2'/>
         </Carousel>
+        <HeroForm />
     </div>
+
   )
 }
 
