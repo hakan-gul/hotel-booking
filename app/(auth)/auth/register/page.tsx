@@ -18,43 +18,77 @@ import { useRouter } from "next/navigation"
 import { Loader2 } from "lucide-react"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
+import { pb } from "@/lib/pocketbase"
+import { useToast } from "@/hooks/use-toast"
+import { ToastAction } from "@/components/ui/toast"
 
 const formSchema = z.object({
   name: z.string().min(2,{message:"Name is required"}),
   email: z.string().min(2,{message:"Email is required"}),
   password: z.string().min(2,{message:"Password is required"}),
-  confirmPassword: z.string().min(2,{message:"Password confirm is required"}),
+  passwordConfirm: z.string().min(2,{message:"Password confirm is required"}),
   username: z.string().min(2,{message:"Username is required"}),
   
-}).refine(
-  (values) => {
-    return values.password === values.confirmPassword;
-  },
-  {
-    message: "Passwords must match!",
-    path: ["confirmPassword"],
-  }
-);
+  }).refine(
+    (values) => {
+      return values.password === values.passwordConfirm;
+    },
+    {
+      message: "Passwords must match!",
+      path: ["passwordConfirm"],
+    }
+  );
 
 const RegisterPage = () => {
 
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+        name: '',
         email: '',
         password: '',
-        confirmPassword: '',
+        passwordConfirm: '',
         username: '',
     },
     })
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  const onSubmit = async(data: z.infer<typeof formSchema>) =>{
     setIsLoading(true);
     console.log(data);
-    setIsLoading(false);
+    try{
+      const userData = {
+        username: data.username,
+        email: data.email,
+        emailVisibility: true,
+        password: data.password,
+        passwordConfirm: data.passwordConfirm,
+        name: data.name,
+    };
+      const record = await pb.collection('users').create(data);
+      toast({
+        variant: "success",
+        title: "Register Success",
+        description: "This job is successful.",
+        action: <ToastAction altText="Success">Success</ToastAction>,
+      })
+      router.refresh();
+      router.push('/auth/login');
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Something went wrong",
+        description: "This job is failed.",
+        action: <ToastAction altText="destructive">destructive</ToastAction>,
+      })
+    }
+    finally{
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -108,7 +142,7 @@ const RegisterPage = () => {
           <FormItem>
             <FormLabel className="text-black">Password</FormLabel>
             <FormControl>
-              <Input placeholder="***" {...field} />
+              <Input type="password" placeholder="***" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -117,12 +151,12 @@ const RegisterPage = () => {
 
       <FormField
         control={form.control}
-        name="confirmPassword"
+        name="passwordConfirm"
         render={({ field }) => (
           <FormItem>
             <FormLabel className="text-black">Password Confirm</FormLabel>
             <FormControl>
-              <Input placeholder="***" {...field} />
+              <Input type="password" placeholder="***" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>

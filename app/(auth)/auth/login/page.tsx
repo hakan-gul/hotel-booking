@@ -20,6 +20,9 @@ import { set } from "date-fns"
 import { Loader2 } from "lucide-react"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
+import { toast, useToast } from "@/hooks/use-toast"
+import { ToastAction } from "@/components/ui/toast"
+import { pb } from "@/lib/pocketbase"
 
 const formSchema = z.object({
   email: z.string().min(2,{message:"Email is required"}),
@@ -30,6 +33,7 @@ const LoginPage = () => {
 
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -39,11 +43,42 @@ const LoginPage = () => {
     },
     })
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    setIsLoading(true);
-    console.log(data);
-    setIsLoading(false);
-  }
+    const onSubmit = async(data: z.infer<typeof formSchema>) =>{
+      setIsLoading(true);
+      console.log(data);
+      try{
+        const authData = await pb.collection('users').authWithPassword(
+          data.email,
+          data.password,
+      );
+          
+          console.log(pb.authStore.isValid);
+          console.log(pb.authStore.token);
+          console.log(pb.authStore.model?.id);
+          
+      pb.authStore.clear();
+        toast({
+          variant: "success",
+          title: "Register Success",
+          description: "This job is successful.",
+          action: <ToastAction altText="Success">Success</ToastAction>,
+        })
+        router.refresh();
+        router.push('/');
+      } catch (error) {
+        console.error(error);
+        toast({
+          variant: "destructive",
+          title: "Something went wrong",
+          description: "This job is failed.",
+          action: <ToastAction altText="destructive">destructive</ToastAction>,
+        })
+      }
+      finally{
+        setIsLoading(false);
+      }
+    }
+  
 
   return (
     <Form {...form}>
