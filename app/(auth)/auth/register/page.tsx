@@ -22,10 +22,21 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 
 const formSchema = z.object({
+  name: z.string().min(2,{message:"Name is required"}),
   email: z.string().min(2,{message:"Email is required"}),
   password: z.string().min(2,{message:"Password is required"}),
+  confirmPassword: z.string().min(2,{message:"Password confirm is required"}),
   username: z.string().min(2,{message:"Username is required"}),
-})
+  
+}).refine(
+  (values) => {
+    return values.password === values.confirmPassword;
+  },
+  {
+    message: "Passwords must match!",
+    path: ["confirmPassword"],
+  }
+);
 
 const RegisterPage = () => {
 
@@ -37,6 +48,7 @@ const RegisterPage = () => {
     defaultValues: {
         email: '',
         password: '',
+        confirmPassword: '',
         username: '',
     },
     })
@@ -50,6 +62,20 @@ const RegisterPage = () => {
   return (
     <Form {...form}>
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-4/5">
+    <FormField
+        control={form.control}
+        name="name"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-black">Name</FormLabel>
+            <FormControl>
+              <Input placeholder="Hakan" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
     <FormField
         control={form.control}
         name="username"
@@ -77,12 +103,26 @@ const RegisterPage = () => {
         )}
       />
 
-<FormField
+      <FormField
         control={form.control}
         name="password"
         render={({ field }) => (
           <FormItem>
             <FormLabel className="text-black">Password</FormLabel>
+            <FormControl>
+              <Input placeholder="***" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="confirmPassword"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-black">Password Confirm</FormLabel>
             <FormControl>
               <Input placeholder="***" {...field} />
             </FormControl>
