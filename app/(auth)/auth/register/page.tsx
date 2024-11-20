@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation"
 import { Loader2 } from "lucide-react"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-import { pb } from "@/lib/pocketbase"
+import pb from "@/lib/pocketbase"
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 
