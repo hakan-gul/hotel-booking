@@ -8,7 +8,7 @@ import {
     CarouselPrevious,
   } from "@/components/ui/carousel"
 
-  import Autoplay from "embla-carousel-autoplay"
+ import Autoplay from "embla-carousel-autoplay"
 import { apiImagesUrl } from '@/constans'
 import Image from 'next/image'
 import ImageWaves from '@/components/ImageWaves'
